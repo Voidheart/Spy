@@ -37,7 +37,7 @@ The drop down menu can also be used to set the reasons why you have added someon
 
 
 |cffffd000Author: http://www.wowhead.com/?user=Immolation|cffffffff
-
+|cffffd000Contributing Author: Plagueheart|cffffffff
 ]]
 L["EnableSpy"] = "Enable Spy"
 L["EnableSpyDescription"] = "Enables or disables Spy both now and also on login."
