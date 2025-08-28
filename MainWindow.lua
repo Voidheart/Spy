@@ -15,33 +15,41 @@ function Spy:CreateMapNote(num)
 		return
 	end
 
-	local worldIcon = CreateFrame("Button", "Spy_MapNoteList_world"..num, WorldMapDetailFrame)
+	local worldIcon = CreateFrame("Button", "Spy_MapNoteList_world" .. num, WorldMapDetailFrame)
 	worldIcon:SetFrameStrata(WorldMapDetailFrame:GetFrameStrata())
 	worldIcon:SetParent(WorldMapDetailFrame)
 	worldIcon:SetFrameLevel(WorldMapDetailFrame:GetFrameLevel() + 5)
-	worldIcon:SetScript("OnEnter", function(self) Spy:ShowMapTooltip(self, true) end)
-	worldIcon:SetScript("OnLeave", function(self) Spy:ShowMapTooltip(self, false) end)
+	worldIcon:SetScript("OnEnter", function(self)
+		Spy:ShowMapTooltip(self, true)
+	end)
+	worldIcon:SetScript("OnLeave", function(self)
+		Spy:ShowMapTooltip(self, false)
+	end)
 	worldIcon:SetWidth(28)
 	worldIcon:SetHeight(28)
 	worldIcon.id = num
 
 	local worldTexture = worldIcon:CreateTexture(nil, "OVERLAY")
-	worldTexture:SetTexture("Interface\\WorldStateFrame\\"..Spy.EnemyFactionName.."Icon.blp")
+	worldTexture:SetTexture("Interface\\WorldStateFrame\\" .. Spy.EnemyFactionName .. "Icon.blp")
 	worldTexture:SetAllPoints(worldIcon)
 	worldIcon.texture = worldTexture
 
-	local miniIcon = CreateFrame("Button", "Spy_MapNoteList_mini"..num, Minimap)
+	local miniIcon = CreateFrame("Button", "Spy_MapNoteList_mini" .. num, Minimap)
 	miniIcon:SetFrameStrata(Minimap:GetFrameStrata())
 	miniIcon:SetParent(Minimap)
 	miniIcon:SetFrameLevel(Minimap:GetFrameLevel() + 5)
-	miniIcon:SetScript("OnEnter", function(self) Spy:ShowMapTooltip(self, true) end)
-	miniIcon:SetScript("OnLeave", function(self) Spy:ShowMapTooltip(self, false) end)
+	miniIcon:SetScript("OnEnter", function(self)
+		Spy:ShowMapTooltip(self, true)
+	end)
+	miniIcon:SetScript("OnLeave", function(self)
+		Spy:ShowMapTooltip(self, false)
+	end)
 	miniIcon:SetWidth(24)
 	miniIcon:SetHeight(24)
 	miniIcon.id = num
 
 	local miniTexture = miniIcon:CreateTexture(nil, "OVERLAY")
-	miniTexture:SetTexture("Interface\\WorldStateFrame\\"..Spy.EnemyFactionName.."Icon.blp")
+	miniTexture:SetTexture("Interface\\WorldStateFrame\\" .. Spy.EnemyFactionName .. "Icon.blp")
 	miniTexture:SetAllPoints(miniIcon)
 	miniIcon.texture = worldTexture
 
@@ -63,8 +71,14 @@ function Spy:CreateRow(num)
 		return
 	end
 
-	local row = CreateFrame("Button", "Spy_MainWindow_Bar"..num, Spy.MainWindow, "SpySecureActionButtonTemplate")
-	row:SetPoint("TOPLEFT", Spy.MainWindow, "TOPLEFT", 2, -34 - (Spy.db.profile.MainWindow.RowHeight + Spy.db.profile.MainWindow.RowSpacing) * (num - 1))
+	local row = CreateFrame("Button", "Spy_MainWindow_Bar" .. num, Spy.MainWindow, "SpySecureActionButtonTemplate")
+	row:SetPoint(
+		"TOPLEFT",
+		Spy.MainWindow,
+		"TOPLEFT",
+		2,
+		-34 - (Spy.db.profile.MainWindow.RowHeight + Spy.db.profile.MainWindow.RowSpacing) * (num - 1)
+	)
 	row:SetHeight(Spy.db.profile.MainWindow.RowHeight)
 	row:SetWidth(Spy.MainWindow:GetWidth() - 4)
 
@@ -89,7 +103,7 @@ function Spy:SetupBar(row)
 		BarTexture = SM:Fetch("statusbar", BarTexture)
 	end
 	row.StatusBar:SetStatusBarTexture(BarTexture)
-	row.StatusBar:SetStatusBarColor(.5, .5, .5, 0.8)
+	row.StatusBar:SetStatusBarColor(0.5, 0.5, 0.5, 0.8)
 	row.StatusBar:SetMinMaxValues(0, 100)
 	row.StatusBar:SetValue(100)
 	row.StatusBar:Show()
@@ -124,8 +138,8 @@ function Spy:UpdateBarTextures()
 end
 
 function Spy:SetBarTextures(handle)
-	local Texture = SM:Fetch(SM.MediaType.STATUSBAR,handle)
-	Spy.db.profile.BarTexture=handle
+	local Texture = SM:Fetch(SM.MediaType.STATUSBAR, handle)
+	Spy.db.profile.BarTexture = handle
 	for _, v in pairs(Spy.MainWindow.Rows) do
 		v.StatusBar:SetStatusBarTexture(Texture)
 	end
@@ -133,8 +147,12 @@ end
 
 local info = {}
 function Spy_CreateBarDropdown(self, level)
-	if not level then return end
-	for k in pairs(info) do info[k] = nil end
+	if not level then
+		return
+	end
+	for k in pairs(info) do
+		info[k] = nil
+	end
 	if self and self.relativeTo.LeftText then
 		local player = self.relativeTo.LeftText:GetText()
 		if level == 1 then
@@ -162,7 +180,9 @@ function Spy_CreateBarDropdown(self, level)
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["AddToKOSList"]
-				info.func = function() Spy:ToggleKOSPlayer(true, player) end
+				info.func = function()
+					Spy:ToggleKOSPlayer(true, player)
+				end
 				info.value = nil
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
@@ -181,7 +201,9 @@ function Spy_CreateBarDropdown(self, level)
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["RemoveFromKOSList"]
-				info.func = function() Spy:ToggleKOSPlayer(false, player) end
+				info.func = function()
+					Spy:ToggleKOSPlayer(false, player)
+				end
 				info.value = nil
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
@@ -192,7 +214,9 @@ function Spy_CreateBarDropdown(self, level)
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["AddToIgnoreList"]
-				info.func = function() Spy:ToggleIgnorePlayer(true, player) end
+				info.func = function()
+					Spy:ToggleIgnorePlayer(true, player)
+				end
 				info.value = nil
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
@@ -202,7 +226,9 @@ function Spy_CreateBarDropdown(self, level)
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["RemoveFromIgnoreList"]
-				info.func = function() Spy:ToggleIgnorePlayer(false, player) end
+				info.func = function()
+					Spy:ToggleIgnorePlayer(false, player)
+				end
 				info.value = nil
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
@@ -213,7 +239,9 @@ function Spy_CreateBarDropdown(self, level)
 				info.notCheckable = true
 				info.disabled = nil
 				info.text = L["Clear"]
-				info.func = function() Spy:RemovePlayerFromList(player) end
+				info.func = function()
+					Spy:RemovePlayerFromList(player)
+				end
 				info.value = nil
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
@@ -222,14 +250,19 @@ function Spy_CreateBarDropdown(self, level)
 			local key = UIDROPDOWNMENU_MENU_VALUE["Key"]
 			info = UIDropDownMenu_CreateInfo()
 
-			if key == L["AnnounceDropDownMenu"] and (Spy.db.profile.CurrentList == 1 or Spy.db.profile.CurrentList == 2) then
+			if
+				key == L["AnnounceDropDownMenu"]
+				and (Spy.db.profile.CurrentList == 1 or Spy.db.profile.CurrentList == 2)
+			then
 				info.isTitle = nil
 				info.notCheckable = true
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["PartyDropDownMenu"]
-				info.func = function() Spy:AnnouncePlayer(player, "PARTY") end
-				info.value = { ["Key"] = key; ["Subkey"] = 1; }
+				info.func = function()
+					Spy:AnnouncePlayer(player, "PARTY")
+				end
+				info.value = { ["Key"] = key, ["Subkey"] = 1 }
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
 
@@ -238,8 +271,10 @@ function Spy_CreateBarDropdown(self, level)
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["RaidDropDownMenu"]
-				info.func = function() Spy:AnnouncePlayer(player, "RAID") end
-				info.value = { ["Key"] = key; ["Subkey"] = 2; }
+				info.func = function()
+					Spy:AnnouncePlayer(player, "RAID")
+				end
+				info.value = { ["Key"] = key, ["Subkey"] = 2 }
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
 
@@ -248,8 +283,10 @@ function Spy_CreateBarDropdown(self, level)
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["GuildDropDownMenu"]
-				info.func = function() Spy:AnnouncePlayer(player, "GUILD") end
-				info.value = { ["Key"] = key; ["Subkey"] = 3; }
+				info.func = function()
+					Spy:AnnouncePlayer(player, "GUILD")
+				end
+				info.value = { ["Key"] = key, ["Subkey"] = 3 }
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
 
@@ -258,8 +295,10 @@ function Spy_CreateBarDropdown(self, level)
 				info.hasArrow = false
 				info.disabled = nil
 				info.text = L["LocalDefenseDropDownMenu"]
-				info.func = function() Spy:AnnouncePlayer(player, "LOCAL") end
-				info.value = { ["Key"] = key; ["Subkey"] = 4; }
+				info.func = function()
+					Spy:AnnouncePlayer(player, "LOCAL")
+				end
+				info.value = { ["Key"] = key, ["Subkey"] = 4 }
 				info.arg1 = self.relativeTo.name
 				UIDropDownMenu_AddButton(info, level)
 			end
@@ -272,7 +311,7 @@ function Spy_CreateBarDropdown(self, level)
 					info.hasArrow = true
 					info.disabled = nil
 					info.text = reason.title
-					info.value = { ["Key"] = key; ["Subkey"] = reason.title; ["Index"] = i; }
+					info.value = { ["Key"] = key, ["Subkey"] = reason.title, ["Index"] = i }
 					info.arg1 = self.relativeTo.name
 					UIDropDownMenu_AddButton(info, level)
 				end
@@ -310,7 +349,7 @@ function Spy_CreateBarDropdown(self, level)
 					if playerData and playerData.reason and playerData.reason[reason] == true then
 						info.checked = true
 					end
-					info.value = { ["Key"] = subkey; ["Subkey"] = index; }
+					info.value = { ["Key"] = subkey, ["Subkey"] = index }
 					info.arg1 = self.relativeTo.name
 					UIDropDownMenu_AddButton(info, level)
 				end
@@ -322,7 +361,7 @@ end
 function Spy:BarDropDownOpen(myframe)
 	Spy_BarDropDownMenu = CreateFrame("Frame", "Spy_BarDropDownMenu", myframe)
 	Spy_BarDropDownMenu.displayMode = "MENU"
-	Spy_BarDropDownMenu.initialize	= Spy_CreateBarDropdown
+	Spy_BarDropDownMenu.initialize = Spy_CreateBarDropdown
 
 	local leftPos = myframe:GetLeft()
 	local rightPos = myframe:GetRight()
@@ -361,11 +400,9 @@ end
 
 function Spy:CreateMainWindow()
 	if not Spy.MainWindow then
-		Spy.MainWindow = Spy:CreateFrame("Spy_MainWindow", L["Nearby"], 44, 200,
-		function()
+		Spy.MainWindow = Spy:CreateFrame("Spy_MainWindow", L["Nearby"], 44, 200, function()
 			Spy.db.profile.MainWindowVis = true
-		end,
-		function()
+		end, function()
 			Spy.db.profile.MainWindowVis = false
 		end)
 
@@ -374,30 +411,27 @@ function Spy:CreateMainWindow()
 		theFrame:SetMinResize(90, 44)
 		theFrame:SetMaxResize(300, 264)
 
-		theFrame:SetScript("OnSizeChanged",
-		function(self)
-			if (self.isResizing) then
+		theFrame:SetScript("OnSizeChanged", function(self)
+			if self.isResizing then
 				Spy:ResizeMainWindow()
 			end
 		end)
 		theFrame.TitleClick = CreateFrame("FRAME", nil, theFrame)
 		theFrame.TitleClick:SetAllPoints(theFrame.Title)
 		theFrame.TitleClick:EnableMouse(true)
-		theFrame.TitleClick:SetScript("OnMouseDown",
-		function(self, button) 
+		theFrame.TitleClick:SetScript("OnMouseDown", function(self, button)
 			local parent = self:GetParent()
-			if (((not parent.isLocked) or (parent.isLocked == 0)) and (button == "LeftButton")) then
+			if ((not parent.isLocked) or (parent.isLocked == 0)) and (button == "LeftButton") then
 				Spy:SetWindowTop(parent)
-				parent:StartMoving();
-				parent.isMoving = true;
+				parent:StartMoving()
+				parent.isMoving = true
 			end
 		end)
-		theFrame.TitleClick:SetScript("OnMouseUp",
-		function(self) 
+		theFrame.TitleClick:SetScript("OnMouseUp", function(self)
 			local parent = self:GetParent()
-			if (parent.isMoving) then
-				parent:StopMovingOrSizing();
-				parent.isMoving = false;
+			if parent.isMoving then
+				parent:StopMovingOrSizing()
+				parent.isMoving = false
 				Spy:SaveMainWindowPosition()
 			end
 		end)
@@ -410,8 +444,20 @@ function Spy:CreateMainWindow()
 		theFrame.DragBottomRight:SetHeight(16)
 		theFrame.DragBottomRight:SetPoint("BOTTOMRIGHT", theFrame, "BOTTOMRIGHT", 0, 0)
 		theFrame.DragBottomRight:EnableMouse(true)
-		theFrame.DragBottomRight:SetScript("OnMouseDown", function(self, button) if (((not self:GetParent().isLocked) or (self:GetParent().isLocked == 0)) and (button == "LeftButton")) then self:GetParent().isResizing = true; self:GetParent():StartSizing("BOTTOMRIGHT") end end)
-		theFrame.DragBottomRight:SetScript("OnMouseUp", function(self, button) if self:GetParent().isResizing == true then self:GetParent():StopMovingOrSizing(); Spy:SaveMainWindowPosition(); Spy:RefreshCurrentList(); self:GetParent().isResizing = false; end end)
+		theFrame.DragBottomRight:SetScript("OnMouseDown", function(self, button)
+			if ((not self:GetParent().isLocked) or (self:GetParent().isLocked == 0)) and (button == "LeftButton") then
+				self:GetParent().isResizing = true
+				self:GetParent():StartSizing("BOTTOMRIGHT")
+			end
+		end)
+		theFrame.DragBottomRight:SetScript("OnMouseUp", function(self, button)
+			if self:GetParent().isResizing == true then
+				self:GetParent():StopMovingOrSizing()
+				Spy:SaveMainWindowPosition()
+				Spy:RefreshCurrentList()
+				self:GetParent().isResizing = false
+			end
+		end)
 
 		theFrame.DragBottomLeft = CreateFrame("Button", "SpyResizeGripLeft", theFrame)
 		theFrame.DragBottomLeft:Show()
@@ -422,8 +468,20 @@ function Spy:CreateMainWindow()
 		theFrame.DragBottomLeft:SetHeight(16)
 		theFrame.DragBottomLeft:SetPoint("BOTTOMLEFT", theFrame, "BOTTOMLEFT", 0, 0)
 		theFrame.DragBottomLeft:EnableMouse(true)
-		theFrame.DragBottomLeft:SetScript("OnMouseDown", function(self, button) if (((not self:GetParent().isLocked) or (self:GetParent().isLocked == 0)) and (button == "LeftButton")) then self:GetParent().isResizing = true; self:GetParent():StartSizing("BOTTOMLEFT") end end)
-		theFrame.DragBottomLeft:SetScript("OnMouseUp", function(self, button) if self:GetParent().isResizing == true then self:GetParent():StopMovingOrSizing(); Spy:SaveMainWindowPosition(); Spy:RefreshCurrentList(); self:GetParent().isResizing = false; end end)
+		theFrame.DragBottomLeft:SetScript("OnMouseDown", function(self, button)
+			if ((not self:GetParent().isLocked) or (self:GetParent().isLocked == 0)) and (button == "LeftButton") then
+				self:GetParent().isResizing = true
+				self:GetParent():StartSizing("BOTTOMLEFT")
+			end
+		end)
+		theFrame.DragBottomLeft:SetScript("OnMouseUp", function(self, button)
+			if self:GetParent().isResizing == true then
+				self:GetParent():StopMovingOrSizing()
+				Spy:SaveMainWindowPosition()
+				Spy:RefreshCurrentList()
+				self:GetParent().isResizing = false
+			end
+		end)
 
 		theFrame.RightButton = CreateFrame("Button", nil, theFrame)
 		theFrame.RightButton:SetNormalTexture("Interface\\AddOns\\Spy\\Textures\\button-right.tga")
@@ -432,7 +490,9 @@ function Spy:CreateMainWindow()
 		theFrame.RightButton:SetWidth(16)
 		theFrame.RightButton:SetHeight(16)
 		theFrame.RightButton:SetPoint("TOPRIGHT", theFrame, "TOPRIGHT", -23, -14.5)
-		theFrame.RightButton:SetScript("OnClick", function() Spy:MainWindowNextMode() end)
+		theFrame.RightButton:SetScript("OnClick", function()
+			Spy:MainWindowNextMode()
+		end)
 		theFrame.RightButton:SetFrameLevel(theFrame.RightButton:GetFrameLevel() + 1)
 
 		theFrame.LeftButton = CreateFrame("Button", nil, theFrame)
@@ -442,7 +502,9 @@ function Spy:CreateMainWindow()
 		theFrame.LeftButton:SetWidth(16)
 		theFrame.LeftButton:SetHeight(16)
 		theFrame.LeftButton:SetPoint("RIGHT", theFrame.RightButton, "LEFT", 0, 0)
-		theFrame.LeftButton:SetScript("OnClick", function() Spy:MainWindowPrevMode() end)
+		theFrame.LeftButton:SetScript("OnClick", function()
+			Spy:MainWindowPrevMode()
+		end)
 		theFrame.LeftButton:SetFrameLevel(theFrame.LeftButton:GetFrameLevel() + 1)
 
 		theFrame.ClearButton = CreateFrame("Button", nil, theFrame)
@@ -451,8 +513,10 @@ function Spy:CreateMainWindow()
 		theFrame.ClearButton:SetHighlightTexture("Interface\\AddOns\\Spy\\Textures\\button-highlight.tga")
 		theFrame.ClearButton:SetWidth(16)
 		theFrame.ClearButton:SetHeight(16)
-		theFrame.ClearButton:SetPoint("RIGHT", theFrame.LeftButton,"LEFT", 0, 0)
-		theFrame.ClearButton:SetScript("OnClick", function() Spy:ClearList() end)
+		theFrame.ClearButton:SetPoint("RIGHT", theFrame.LeftButton, "LEFT", 0, 0)
+		theFrame.ClearButton:SetScript("OnClick", function()
+			Spy:ClearList()
+		end)
 		theFrame.ClearButton:SetFrameLevel(theFrame.ClearButton:GetFrameLevel() + 1)
 
 		Spy.MainWindow.Rows = {}
@@ -462,7 +526,12 @@ function Spy:CreateMainWindow()
 			Spy:CreateRow(i)
 		end
 
-		Spy:RestoreMainWindowPosition(Spy.db.profile.MainWindow.Position.x, Spy.db.profile.MainWindow.Position.y, Spy.db.profile.MainWindow.Position.w, 44)
+		Spy:RestoreMainWindowPosition(
+			Spy.db.profile.MainWindow.Position.x,
+			Spy.db.profile.MainWindow.Position.y,
+			Spy.db.profile.MainWindow.Position.w,
+			44
+		)
 		Spy:SetupMainWindowButtons()
 		Spy:ResizeMainWindow()
 		Spy:ScheduleRepeatingTimer("ManageExpirations", 10, true)
@@ -476,8 +545,11 @@ function Spy:CreateMainWindow()
 		Spy.AlertWindow:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 		Spy.AlertWindow:SetHeight(42)
 		Spy.AlertWindow:SetBackdrop({
-			bgFile = "Interface\\AddOns\\Spy\\Textures\\alert-background.tga", tile = true, tileSize = 8,
-			edgeFile = "Interface\\AddOns\\Spy\\Textures\\alert-industrial.tga", edgeSize = 8,
+			bgFile = "Interface\\AddOns\\Spy\\Textures\\alert-background.tga",
+			tile = true,
+			tileSize = 8,
+			edgeFile = "Interface\\AddOns\\Spy\\Textures\\alert-industrial.tga",
+			edgeSize = 8,
 			insets = { left = 8, right = 8, top = 8, bottom = 8 },
 		})
 		Spy.Colors:RegisterBackground("Alert", "Background", Spy.AlertWindow)
@@ -549,13 +621,25 @@ function Spy:SetBar(num, name, desc, value, colorgroup, colorclass, tooltipData,
 		Spy.Colors:RegisterTexture(colorgroup, colorclass, Row.StatusBar, Multi)
 	end
 
-	Row.LeftText:SetTextColor(Spy.db.profile.Colors.Bar["Bar Text"].r, Spy.db.profile.Colors.Bar["Bar Text"].g, Spy.db.profile.Colors.Bar["Bar Text"].b, opacity)
-	Row.RightText:SetTextColor(Spy.db.profile.Colors.Bar["Bar Text"].r, Spy.db.profile.Colors.Bar["Bar Text"].g, Spy.db.profile.Colors.Bar["Bar Text"].b, opacity)
+	Row.LeftText:SetTextColor(
+		Spy.db.profile.Colors.Bar["Bar Text"].r,
+		Spy.db.profile.Colors.Bar["Bar Text"].g,
+		Spy.db.profile.Colors.Bar["Bar Text"].b,
+		opacity
+	)
+	Row.RightText:SetTextColor(
+		Spy.db.profile.Colors.Bar["Bar Text"].r,
+		Spy.db.profile.Colors.Bar["Bar Text"].g,
+		Spy.db.profile.Colors.Bar["Bar Text"].b,
+		opacity
+	)
 end
 
 function Spy:AutomaticallyResize()
 	local detected = Spy.ListAmountDisplayed
-	if detected > Spy.ButtonLimit then detected = Spy.ButtonLimit end
+	if detected > Spy.ButtonLimit then
+		detected = Spy.ButtonLimit
+	end
 	local height = 45 + (detected * (Spy.db.profile.MainWindow.RowHeight + Spy.db.profile.MainWindow.RowSpacing))
 	Spy.MainWindow.CurRows = detected
 	Spy:RestoreMainWindowPosition(Spy.MainWindow:GetLeft(), Spy.MainWindow:GetTop(), Spy.MainWindow:GetWidth(), height)
@@ -563,9 +647,15 @@ end
 
 function Spy:ManageBarsDisplayed()
 	local detected = Spy.ListAmountDisplayed
-	local bars = math.floor((Spy.MainWindow:GetHeight() - 44) / (Spy.db.profile.MainWindow.RowHeight + Spy.db.profile.MainWindow.RowSpacing))
-	if bars > detected then bars = detected end
-	if bars > Spy.ButtonLimit then bars = Spy.ButtonLimit end
+	local bars = math.floor(
+		(Spy.MainWindow:GetHeight() - 44) / (Spy.db.profile.MainWindow.RowHeight + Spy.db.profile.MainWindow.RowSpacing)
+	)
+	if bars > detected then
+		bars = detected
+	end
+	if bars > Spy.ButtonLimit then
+		bars = Spy.ButtonLimit
+	end
 	Spy.MainWindow.CurRows = bars
 
 	for i = 1, Spy.ButtonLimit do
@@ -578,7 +668,9 @@ function Spy:ManageBarsDisplayed()
 end
 
 function Spy:ResizeMainWindow()
-	if Spy.MainWindow.Rows[0] then Spy.MainWindow.Rows[0]:Hide() end
+	if Spy.MainWindow.Rows[0] then
+		Spy.MainWindow.Rows[0]:Hide()
+	end
 
 	local CurWidth = Spy.MainWindow:GetWidth() - 4
 	Spy.MainWindow.Title:SetWidth(CurWidth - 75)
@@ -655,17 +747,32 @@ function Spy:ShowTooltip(show, id)
 				end
 
 				local details = ""
-				if playerData.level then details = L["Level"].." "..playerData.level.." " end
-				if playerData.race then details = details..playerData.race.." " end
-				if playerData.class then details = details..L[playerData.class] end
-				GameTooltip:AddLine(details..L["Player"], detailsText.r, detailsText.g, detailsText.b)
+				if playerData.level then
+					details = L["Level"] .. " " .. playerData.level .. " "
+				end
+				if playerData.race then
+					details = details .. playerData.race .. " "
+				end
+				if playerData.class then
+					details = details .. L[playerData.class]
+				end
+				GameTooltip:AddLine(details .. L["Player"], detailsText.r, detailsText.g, detailsText.b)
 
 				if Spy.db.profile.DisplayWinLossStatistics then
 					local wins = "0"
 					local loses = "0"
-					if playerData.wins then wins = playerData.wins end
-					if playerData.loses then loses = playerData.loses end
-					GameTooltip:AddLine(L["StatsWins"]..wins..L["StatsSeparator"]..L["StatsLoses"]..loses, detailsText.r, detailsText.g, detailsText.b)
+					if playerData.wins then
+						wins = playerData.wins
+					end
+					if playerData.loses then
+						loses = playerData.loses
+					end
+					GameTooltip:AddLine(
+						L["StatsWins"] .. wins .. L["StatsSeparator"] .. L["StatsLoses"] .. loses,
+						detailsText.r,
+						detailsText.g,
+						detailsText.b
+					)
 				end
 
 				if SpyPerCharDB.KOSData[name] then
@@ -674,9 +781,19 @@ function Spy:ShowTooltip(show, id)
 					if playerData.reason and Spy.db.profile.DisplayKOSReason then
 						for reason in pairs(playerData.reason) do
 							if reason == L["KOSReasonOther"] then
-								GameTooltip:AddLine(L["KOSReasonIndent"]..playerData.reason[reason], reasonText.r, reasonText.g, reasonText.b)
+								GameTooltip:AddLine(
+									L["KOSReasonIndent"] .. playerData.reason[reason],
+									reasonText.r,
+									reasonText.g,
+									reasonText.b
+								)
 							else
-								GameTooltip:AddLine(L["KOSReasonIndent"]..reason, reasonText.r, reasonText.g, reasonText.b)
+								GameTooltip:AddLine(
+									L["KOSReasonIndent"] .. reason,
+									reasonText.r,
+									reasonText.g,
+									reasonText.b
+								)
 							end
 						end
 					end
@@ -689,18 +806,23 @@ function Spy:ShowTooltip(show, id)
 						local minutes = math.floor((time() - playerData.time) / 60)
 						local hours = math.floor(minutes / 60)
 						if minutes <= 0 then
-							lastSeen = lastSeen.." "..L["LessThanOneMinuteAgo"]
+							lastSeen = lastSeen .. " " .. L["LessThanOneMinuteAgo"]
 						elseif minutes > 0 and minutes < 60 then
-							lastSeen = lastSeen.." "..minutes.." "..L["MinutesAgo"]
+							lastSeen = lastSeen .. " " .. minutes .. " " .. L["MinutesAgo"]
 						elseif hours > 0 and hours < 24 then
-							lastSeen = lastSeen.." "..hours.." "..L["HoursAgo"]
+							lastSeen = lastSeen .. " " .. hours .. " " .. L["HoursAgo"]
 						else
 							local days = math.floor(hours / 24)
-							lastSeen = lastSeen.." "..days.." "..L["DaysAgo"]
+							lastSeen = lastSeen .. " " .. days .. " " .. L["DaysAgo"]
 						end
 						GameTooltip:AddLine(lastSeen, locationText.r, locationText.g, locationText.b)
 					end
-					GameTooltip:AddLine(Spy:GetPlayerLocation(playerData), locationText.r, locationText.g, locationText.b)
+					GameTooltip:AddLine(
+						Spy:GetPlayerLocation(playerData),
+						locationText.r,
+						locationText.g,
+						locationText.b
+					)
 				end
 			end
 
@@ -721,13 +843,22 @@ function Spy:ShowMapTooltip(icon, show)
 		if distance == nil then
 			distance = ""
 		else
-			distance = math.floor(distance).." "..L["Yards"]
+			distance = math.floor(distance) .. " " .. L["Yards"]
 		end
 
 		tooltip:SetOwner(icon, "ANCHOR_NONE")
 		tooltip:SetPoint("TOPLEFT", icon, "TOPRIGHT", 16, 0)
 		tooltip:ClearLines()
-		tooltip:AddDoubleLine(Spy.EnemyFactionName.." "..L["Located"], distance, titleText.r, titleText.g, titleText.b, locationText.r, locationText.g, locationText.b)
+		tooltip:AddDoubleLine(
+			Spy.EnemyFactionName .. " " .. L["Located"],
+			distance,
+			titleText.r,
+			titleText.g,
+			titleText.b,
+			locationText.r,
+			locationText.g,
+			locationText.b
+		)
 
 		for player in pairs(Spy.PlayerCommList) do
 			if Spy.PlayerCommList[player] == icon.id then
@@ -735,14 +866,24 @@ function Spy:ShowMapTooltip(icon, show)
 				local playerData = SpyPerCharDB.PlayerData[player]
 				if playerData and playerData.isEnemy then
 					if playerData.guild and strlen(playerData.guild) > 0 then
-						name = name..L["MinimapGuildText"].." <"..playerData.guild..">"
+						name = name .. L["MinimapGuildText"] .. " <" .. playerData.guild .. ">"
 					end
 					if playerData.class and playerData.level then
-						description = description..L["MinimapClassText"..playerData.class].."["..playerData.level.." "..L[playerData.class].."]"
+						description = description
+							.. L["MinimapClassText" .. playerData.class]
+							.. "["
+							.. playerData.level
+							.. " "
+							.. L[playerData.class]
+							.. "]"
 					elseif playerData.class then
-						description = description..L["MinimapClassText"..playerData.class].."["..L[playerData.class].."]"
+						description = description
+							.. L["MinimapClassText" .. playerData.class]
+							.. "["
+							.. L[playerData.class]
+							.. "]"
 					elseif playerData.level then
-						description = description.."["..playerData.level.."]"
+						description = description .. "[" .. playerData.level .. "]"
 					end
 				end
 				tooltip:AddDoubleLine(name, description)
@@ -771,7 +912,7 @@ function Spy:ShowAlert(type, name, source, location)
 		Spy.Colors:RegisterFont("Alert", "KOS Text", Spy.AlertWindow.Location)
 		Spy.AlertWindow.Location:SetText(location)
 		Spy.AlertWindow:SetWidth(Spy.AlertWindow.Title:GetStringWidth() + 52)
-		if (Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Name:GetStringWidth()) then
+		if Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Name:GetStringWidth() then
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Name:GetStringWidth() + 52)
 		else
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Title:GetStringWidth() + 52)
@@ -791,7 +932,7 @@ function Spy:ShowAlert(type, name, source, location)
 		Spy.AlertWindow.Name:SetText(name)
 		Spy.AlertWindow.Location:SetText("")
 		Spy.AlertWindow:SetWidth(Spy.AlertWindow.Title:GetStringWidth() + 52)
-		if (Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Name:GetStringWidth()) then
+		if Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Name:GetStringWidth() then
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Name:GetStringWidth() + 52)
 		else
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Title:GetStringWidth() + 52)
@@ -811,7 +952,7 @@ function Spy:ShowAlert(type, name, source, location)
 		Spy.AlertWindow.Name:SetText(name)
 		Spy.AlertWindow.Location:SetText("")
 		Spy.AlertWindow:SetWidth(Spy.AlertWindow.Title:GetStringWidth() + 52)
-		if (Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Name:GetStringWidth()) then
+		if Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Name:GetStringWidth() then
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Name:GetStringWidth() + 52)
 		else
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Title:GetStringWidth() + 52)
@@ -820,7 +961,12 @@ function Spy:ShowAlert(type, name, source, location)
 		UIFrameFlashRemoveFrame(Spy.AlertWindow)
 		UIFrameFlash(Spy.AlertWindow, 0, 1, 4, false, 3, 0)
 		Spy.AlertType = type
-	elseif (type == "kosaway" or type == "kosguildaway") and Spy.AlertType ~= "kos" and Spy.AlertType ~= "kosguild" and Spy.AlertType ~= "stealth" then
+	elseif
+		(type == "kosaway" or type == "kosguildaway")
+		and Spy.AlertType ~= "kos"
+		and Spy.AlertType ~= "kosguild"
+		and Spy.AlertType ~= "stealth"
+	then
 		local realmSeparator = strfind(source, "-")
 		if realmSeparator and realmSeparator > 1 then
 			source = strreplace(strsub(source, 1, realmSeparator - 1), " ", "")
@@ -830,12 +976,12 @@ function Spy:ShowAlert(type, name, source, location)
 		Spy.Colors:RegisterBorder("Alert", "Background", Spy.AlertWindow.Icon)
 		Spy.Colors:RegisterBackground("Alert", "Icon", Spy.AlertWindow.Icon)
 		Spy.Colors:RegisterFont("Alert", "Away Text", Spy.AlertWindow.Title)
-		Spy.AlertWindow.Title:SetText(L["AlertTitle_"..type]..source.."!")
+		Spy.AlertWindow.Title:SetText(L["AlertTitle_" .. type] .. source .. "!")
 		Spy.Colors:RegisterFont("Alert", "Name Text", Spy.AlertWindow.Name)
 		Spy.AlertWindow.Name:SetText(name)
 		Spy.Colors:RegisterFont("Alert", "Location Text", Spy.AlertWindow.Location)
 		Spy.AlertWindow.Location:SetText(location)
-		if (Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Location:GetStringWidth()) then
+		if Spy.AlertWindow.Title:GetStringWidth() < Spy.AlertWindow.Location:GetStringWidth() then
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Location:GetStringWidth() + 52)
 		else
 			Spy.AlertWindow:SetWidth(Spy.AlertWindow.Title:GetStringWidth() + 52)

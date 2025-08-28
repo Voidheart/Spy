@@ -7,9 +7,12 @@ function Spy:CreateFrame(Name, Title, Height, Width, ShowFunc, HideFunc)
 	theFrame:SetWidth(Width)
 
 	theFrame:SetBackdrop({
-		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,
-		edgeFile = "Interface\\AddOns\\Spy\\Textures\\title-industrial.tga", edgeSize = 32,
-		insets = {left = 0, right = 0, top = 31, bottom = 0},
+		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+		tile = true,
+		tileSize = 16,
+		edgeFile = "Interface\\AddOns\\Spy\\Textures\\title-industrial.tga",
+		edgeSize = 32,
+		insets = { left = 0, right = 0, top = 31, bottom = 0 },
 	})
 
 	if Name == "Spy_MainWindow" then
@@ -23,38 +26,34 @@ function Spy:CreateFrame(Name, Title, Height, Width, ShowFunc, HideFunc)
 	theFrame:EnableMouse(true)
 	theFrame:SetMovable(true)
 
-	theFrame:SetScript("OnMouseDown",
-	function() 
-		if (((not this.isLocked) or (this.isLocked == 0)) and (arg1 == "LeftButton")) then
+	theFrame:SetScript("OnMouseDown", function()
+		if ((not this.isLocked) or (this.isLocked == 0)) and (arg1 == "LeftButton") then
 			Spy:SetWindowTop(this)
-			this:StartMoving();
-			this.isMoving = true;
+			this:StartMoving()
+			this.isMoving = true
 		end
 	end)
-	theFrame:SetScript("OnMouseUp",
-	function() 
-		if (this.isMoving) then
-			this:StopMovingOrSizing();
-			this.isMoving = false;
+	theFrame:SetScript("OnMouseUp", function()
+		if this.isMoving then
+			this:StopMovingOrSizing()
+			this.isMoving = false
 			Spy:SaveMainWindowPosition()
 		end
 	end)
 	theFrame.ShowFunc = ShowFunc
-	theFrame:SetScript("OnShow",
-	function()
+	theFrame:SetScript("OnShow", function()
 		Spy:SetWindowTop(this)
-		if (this.ShowFunc) then
+		if this.ShowFunc then
 			this:ShowFunc()
 		end
 	end)
 	theFrame.HideFunc = HideFunc
-	theFrame:SetScript("OnHide",
-	function() 
-		if (this.isMoving) then
-			this:StopMovingOrSizing();
-			this.isMoving = false;
+	theFrame:SetScript("OnHide", function()
+		if this.isMoving then
+			this:StopMovingOrSizing()
+			this.isMoving = false
 		end
-		if (this.HideFunc) then
+		if this.HideFunc then
 			this:HideFunc()
 		end
 	end)
@@ -81,7 +80,9 @@ function Spy:CreateFrame(Name, Title, Height, Width, ShowFunc, HideFunc)
 	theFrame.CloseButton:SetWidth(20)
 	theFrame.CloseButton:SetHeight(20)
 	theFrame.CloseButton:SetPoint("TOPRIGHT", theFrame, "TOPRIGHT", -4, -12)
-	theFrame.CloseButton:SetScript("OnClick", function() this:GetParent():Hide() end)
+	theFrame.CloseButton:SetScript("OnClick", function()
+		this:GetParent():Hide()
+	end)
 
 	return theFrame
 end

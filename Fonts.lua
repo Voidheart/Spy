@@ -1,4 +1,4 @@
-local FontStrings={}
+local FontStrings = {}
 local FontFile
 local SM = LibStub:GetLibrary("LibSharedMedia-3.0")
 
@@ -7,7 +7,7 @@ SM:Register("font", "ABF", [[Interface\AddOns\Spy\Fonts\ABF.ttf]])
 function Spy:AddFontString(string)
 	local Font, Height, Flags
 
-	FontStrings[#FontStrings+1] = string
+	FontStrings[#FontStrings + 1] = string
 
 	if not FontFile and Spy.db.profile.Font then
 		FontFile = SM:Fetch("font", Spy.db.profile.Font)
@@ -25,7 +25,7 @@ function Spy:SetFont(fontname)
 	local Height, Flags
 
 	Spy.db.profile.Font = fontname
-	FontFile = SM:Fetch("font",fontname)
+	FontFile = SM:Fetch("font", fontname)
 
 	for _, v in pairs(FontStrings) do
 		_, Height, Flags = v:GetFont()

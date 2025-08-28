@@ -6,7 +6,6 @@ local TypeToUpdate = {}
 local ColorMultiplier = {}
 local TextureBackgroundsToUpdate = {}
 
-
 local TYPE_TEXTURE = 1
 local TYPE_BORDER = 2
 local TYPE_BACKGROUND = 3
@@ -26,10 +25,10 @@ local function Color_Change()
 	if not ColorPickerFrame.hasOpacity then
 		TempColor.a = nil
 	else
-		TempColor.a = 1.0-OpacitySliderFrame:GetValue()
+		TempColor.a = 1.0 - OpacitySliderFrame:GetValue()
 	end
 
-	Colors:SetColor(Cur_Branch,Cur_Name, TempColor)
+	Colors:SetColor(Cur_Branch, Cur_Name, TempColor)
 end
 
 local function Opacity_Change()
@@ -41,11 +40,10 @@ local function Opacity_Change()
 	TempColor.b = b
 	TempColor.a = a
 
-	Colors:SetColor(Cur_Branch,Cur_Name, TempColor)
+	Colors:SetColor(Cur_Branch, Cur_Name, TempColor)
 end
 
-local function Fake_Change()
-end
+local function Fake_Change() end
 
 local function Color_Cancel()
 	Colors:SetColor(Cur_Branch, Cur_Name, ColorPickerFrame.previousValues)
@@ -83,7 +81,6 @@ function Colors:SetColor(Branch, Name, c)
 end
 
 function Colors:UpdateColor(Branch, Name)
-
 	local c = Colors:GetColor(Branch, Name)
 
 	local Items = ItemsToUpdate[Branch][Name]
@@ -97,13 +94,13 @@ function Colors:UpdateColor(Branch, Name)
 			local Multi = ColorMultiplier[Branch][Name][k]
 			if c.a then
 				if Multi then
-					Items[k]:SetVertexColor(c.r*Multi.r, c.g*Multi.g, c.b*Multi.b, c.a*Multi.a)
+					Items[k]:SetVertexColor(c.r * Multi.r, c.g * Multi.g, c.b * Multi.b, c.a * Multi.a)
 				else
 					Items[k]:SetVertexColor(c.r, c.g, c.b, c.a)
 				end
 			else
 				if Multi then
-					Items[k]:SetVertexColor(c.r*Multi.r, c.g*Multi.g, c.b*Multi.b)
+					Items[k]:SetVertexColor(c.r * Multi.r, c.g * Multi.g, c.b * Multi.b)
 				else
 					Items[k]:SetVertexColor(c.r, c.g, c.b)
 				end
@@ -121,7 +118,7 @@ function Colors:UpdateColor(Branch, Name)
 				Items[k]:SetBackdropColor(c.r, c.g, c.b)
 			end
 		elseif v == TYPE_FUNC then
-			Items[k][1](Items[k][2], {c.r, c.g, c.b, c.a})
+			Items[k][1](Items[k][2], { c.r, c.g, c.b, c.a })
 		elseif v == TYPE_FONT then
 			if c.a then
 				Items[k]:SetTextColor(c.r, c.g, c.b, c.a)
@@ -131,7 +128,6 @@ function Colors:UpdateColor(Branch, Name)
 		end
 	end
 end
-
 
 function Colors:UnregisterItem(Item)
 	for k1, Branch in pairs(ItemsToUpdate) do
@@ -150,9 +146,9 @@ end
 function Colors:RegisterFunction(Branch, Name, Func, Pass)
 	local c = Colors:GetColor(Branch, Name)
 	if c.a then
-		Func(Pass, {c.r, c.g, c.b, c.a})
+		Func(Pass, { c.r, c.g, c.b, c.a })
 	else
-		Func(Pass, {c.r, c.g, c.b})
+		Func(Pass, { c.r, c.g, c.b })
 	end
 
 	if type(ItemsToUpdate[Branch]) ~= "table" then
@@ -167,7 +163,7 @@ function Colors:RegisterFunction(Branch, Name, Func, Pass)
 		ColorMultiplier[Branch][Name] = {}
 	end
 
-	table.insert(ItemsToUpdate[Branch][Name], {Func, Pass})
+	table.insert(ItemsToUpdate[Branch][Name], { Func, Pass })
 	table.insert(TypeToUpdate[Branch][Name], TYPE_FUNC)
 end
 
@@ -181,13 +177,13 @@ function Colors:RegisterTexture(Branch, Name, Texture, Multi)
 	if c then
 		if c.a then
 			if Multi then
-				Texture:SetVertexColor(c.r*Multi.r, c.g*Multi.g, c.b*Multi.b, c.a*Multi.a)
+				Texture:SetVertexColor(c.r * Multi.r, c.g * Multi.g, c.b * Multi.b, c.a * Multi.a)
 			else
 				Texture:SetVertexColor(c.r, c.g, c.b, c.a)
 			end
 		else
 			if Multi then
-				Texture:SetVertexColor(c.r*Multi.r, c.g*Multi.g, c.b*Multi.b)
+				Texture:SetVertexColor(c.r * Multi.r, c.g * Multi.g, c.b * Multi.b)
 			else
 				Texture:SetVertexColor(c.r, c.g, c.b)
 			end
@@ -206,7 +202,7 @@ function Colors:RegisterTexture(Branch, Name, Texture, Multi)
 		ColorMultiplier[Branch][Name] = {}
 	end
 
-	local entry = #ItemsToUpdate[Branch][Name]+1
+	local entry = #ItemsToUpdate[Branch][Name] + 1
 	table.insert(ItemsToUpdate[Branch][Name], Texture)
 	table.insert(TypeToUpdate[Branch][Name], TYPE_TEXTURE)
 
@@ -342,7 +338,7 @@ end
 function Colors:Debug()
 	for k1, Branch in pairs(ItemsToUpdate) do
 		for k2, Name in pairs(Branch) do
-			Spy:Print(getn(Name).." "..k1.." "..k2)
+			Spy:Print(getn(Name) .. " " .. k1 .. " " .. k2)
 
 			local Items = ItemsToUpdate[k1][k2]
 

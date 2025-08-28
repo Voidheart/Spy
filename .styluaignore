@@ -1,0 +1,5 @@
+# .styluaignore
+
+# Ignore all third-party libraries
+Libs/
+Vendor/

@@ -5,7 +5,7 @@ local AllWindows = {}
 local LevelDiff
 
 local function SetLevel_ProcessChildFrames(...)
-	for i = 1, select('#', ...) do
+	for i = 1, select("#", ...) do
 		local frame = select(i, ...)
 		Spy:SetLevel(frame, frame:GetFrameLevel() + LevelDiff)
 	end
