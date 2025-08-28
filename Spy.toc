@@ -13,6 +13,7 @@ Embeds.xml
 Spy.xml
 Locales\Spy-enUS.lua
 Spy.lua
+Options.lua
 Fonts.lua
 Colors.lua
 Widgets.lua
