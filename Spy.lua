@@ -46,6 +46,17 @@ Spy.AlertType = nil
 Spy.UpgradeMessageSent = false
 
 -- region Plagueheart
+--- Timeout settings for different options.
+local TIMEOUTS = {
+	OneMinute = { active = 30, inactive = 60 },
+	TwoMinutes = { active = 60, inactive = 120 },
+	FiveMinutes = { active = 150, inactive = 300 },
+	TenMinutes = { active = 300, inactive = 600 },
+	FifteenMinutes = { active = 450, inactive = 900 },
+	Never = { active = 30, inactive = -1 },
+	default = { active = 150, inactive = 300 },
+}
+
 --- Flag: track if the player is currently zoning or in a loading state.
 Spy.IsCurrentlyZoning = false
 --- Flag: throttle UI refreshes.
@@ -194,28 +205,11 @@ function Spy:SetupOptions()
 end
 
 function Spy:UpdateTimeoutSettings()
-	if not Spy.db.profile.RemoveUndetected or Spy.db.profile.RemoveUndetected == "OneMinute" then
-		Spy.ActiveTimeout = 30
-		Spy.InactiveTimeout = 60
-	elseif Spy.db.profile.RemoveUndetected == "TwoMinutes" then
-		Spy.ActiveTimeout = 60
-		Spy.InactiveTimeout = 120
-	elseif Spy.db.profile.RemoveUndetected == "FiveMinutes" then
-		Spy.ActiveTimeout = 150
-		Spy.InactiveTimeout = 300
-	elseif Spy.db.profile.RemoveUndetected == "TenMinutes" then
-		Spy.ActiveTimeout = 300
-		Spy.InactiveTimeout = 600
-	elseif Spy.db.profile.RemoveUndetected == "FifteenMinutes" then
-		Spy.ActiveTimeout = 450
-		Spy.InactiveTimeout = 900
-	elseif Spy.db.profile.RemoveUndetected == "Never" then
-		Spy.ActiveTimeout = 30
-		Spy.InactiveTimeout = -1
-	else
-		Spy.ActiveTimeout = 150
-		Spy.InactiveTimeout = 300
-	end
+	local removeSetting = Spy.db.profile.RemoveUndetected
+	local timeout = TIMEOUTS[removeSetting] or TIMEOUTS.default
+
+	Spy.ActiveTimeout = timeout.active
+	Spy.InactiveTimeout = timeout.inactive
 end
 
 function Spy:ResetMainWindow()
