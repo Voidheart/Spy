@@ -125,13 +125,33 @@ L["10Min"] = "10 minutes"
 L["10MinDescription"] = "Remove an enemy player who has been undetected for over 10 minutes."
 L["15Min"] = "15 minutes"
 L["15MinDescription"] = "Remove an enemy player who has been undetected for over 15 minutes."
+
+L["30Min"] = "30 minutes"
+L["30MinDescription"] = "Remove an enemy player who has been undetected for over 30 minutes."
+L["1Hour"] = "1 hour"
+L["1HourDescription"] = "Remove an enemy player who has been undetected for over 1 hour."
+L["2Hours"] = "2 hours"
+L["2HoursDescription"] = "Remove an enemy player who has been undetected for over 2 hours."
+L["4Hours"] = "4 hours"
+L["4HoursDescription"] = "Remove an enemy player who has been undetected for over 4 hours."
+
 L["Never"] = "Never remove"
 L["NeverDescription"] = "Never remove enemy players. The Nearby list can still be cleared manually."
+
+L["NearbyThresholdYards"] = "Nearby distance threshold"
+L["NearbyThresholdYardsDescription"] =
+	"Set the maximum distance (in yards) for a player detected by others to be added to your Nearby list."
+
 L["ShowNearbyList"] = "Switch to the Nearby list upon enemy player detection"
 L["ShowNearbyListDescription"] =
 	"Set this to display the Nearby list if it is not already visible when enemy players are detected."
 L["PrioritiseKoS"] = "Prioritise Kill On Sight enemy players in the Nearby list"
 L["PrioritiseKoSDescription"] = "Set this to always show Kill On Sight enemy players first in the Nearby list."
+
+L["WorldListOptions"] = "World List"
+L["WorldListOptionsDescription"] =
+	"You can configure how Spy adds and removes enemy players to and from the World list."
+L["RemoveFromWorldList"] = "Remove enemy players from the World list after:"
 
 L["MinimapOptions"] = "Map"
 L["MinimapOptionsDescription"] = [[
@@ -203,6 +223,7 @@ L["Nearby"] = "Nearby"
 L["LastHour"] = "Last Hour"
 L["Ignore"] = "Ignore"
 L["KillOnSight"] = "Kill On Sight"
+L["World"] = "World"
 
 -- Class descriptions
 L["DEATHKNIGHT"] = "Death Knight"

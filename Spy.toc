@@ -20,3 +20,4 @@ Widgets.lua
 WindowOrder.lua
 MainWindow.lua
 List.lua
+Query.lua

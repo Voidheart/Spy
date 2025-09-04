@@ -9,6 +9,16 @@ function Spy:RefreshCurrentList(player, source)
 	end
 
 	local mode = Spy.db.profile.CurrentList
+
+	local title = Spy.ListTypes[mode][1]
+	if mode == 1 then
+		local nearbyCount = Spy:GetNearbyListSize()
+		if nearbyCount > 0 then
+			title = string.format("%s (%d)", title, nearbyCount)
+		end
+	end
+	MainWindow.Title:SetText(title)
+
 	local manageFunction = Spy.ListTypes[mode][2]
 	if manageFunction then
 		manageFunction()
@@ -134,6 +144,17 @@ function Spy:ManageLastHourList()
 	Spy.CurrentList = list
 end
 
+function Spy:ManageWorldList()
+	local list = {}
+	for player, timestamp in pairs(Spy.WorldList) do
+		table.insert(list, { player = player, time = timestamp })
+	end
+	table.sort(list, function(a, b)
+		return a.time > b.time
+	end)
+	Spy.CurrentList = list
+end
+
 function Spy:ManageIgnoreList()
 	local list = {}
 	for player in pairs(SpyPerCharDB.IgnoreData) do
@@ -229,6 +250,20 @@ function Spy:ManageLastHourListExpirations()
 	end
 end
 
+function Spy:ManageWorldListExpirations()
+	local expired = false
+	local currentTime = time()
+	for player, timestamp in pairs(Spy.WorldList) do
+		if (currentTime - timestamp) > Spy.WorldListTimeout then
+			Spy.WorldList[player] = nil
+			expired = true
+		end
+	end
+	if expired and Spy.db.profile.CurrentList == 5 then
+		Spy:RefreshCurrentList()
+	end
+end
+
 function Spy:RemovePlayerFromList(player)
 	Spy.NearbyList[player] = nil
 	Spy.ActiveList[player] = nil
@@ -247,6 +282,7 @@ function Spy:ClearList()
 	Spy.ActiveList = {}
 	Spy.InactiveList = {}
 	Spy.PlayerCommList = {}
+	Spy.WorldList = {}
 	Spy.ListAmountDisplayed = 0
 	for i = 1, Spy.MapNoteLimit do
 		Spy.MapNoteList[i].displayed = false
@@ -1097,4 +1133,5 @@ Spy.ListTypes = {
 	{ L["LastHour"], Spy.ManageLastHourList, Spy.ManageLastHourListExpirations },
 	{ L["Ignore"], Spy.ManageIgnoreList },
 	{ L["KillOnSight"], Spy.ManageKillOnSightList },
+	{ L["World"], Spy.ManageWorldList, Spy.ManageWorldListExpirations },
 }

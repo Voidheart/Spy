@@ -459,6 +459,22 @@ local options = {
 						},
 					},
 				},
+				NearbyThresholdYards = {
+					name = L["NearbyThresholdYards"],
+					desc = L["NearbyThresholdYardsDescription"],
+					type = "range",
+					order = 3,
+					min = 10,
+					max = 100,
+					step = 5,
+					get = function(info)
+						return Spy.db.profile.NearbyThresholdYards
+					end,
+					set = function(info, value)
+						Spy.db.profile.NearbyThresholdYards = value
+						Spy.NearbyThresholdYards = value
+					end,
+				},
 				ShowNearbyList = {
 					name = L["ShowNearbyList"],
 					desc = L["ShowNearbyListDescription"],
@@ -487,11 +503,97 @@ local options = {
 				},
 			},
 		},
+		WorldListOptions = {
+			name = L["WorldListOptions"],
+			desc = L["WorldListOptionsDescription"],
+			type = "group",
+			order = 5,
+			args = {
+				intro = {
+					name = L["WorldListOptionsDescription"],
+					type = "description",
+					order = 1,
+				},
+				RemoveFromWorldList = {
+					name = L["RemoveFromWorldList"],
+					type = "group",
+					order = 2,
+					inline = true,
+					args = {
+						ThirtyMinutes = {
+							name = L["30Min"],
+							desc = L["30MinDescription"],
+							type = "toggle",
+							order = 1,
+							get = function(info)
+								return Spy.db.profile.RemoveFromWorldList == "ThirtyMinutes"
+							end,
+							set = function(info, value)
+								Spy.db.profile.RemoveFromWorldList = "ThirtyMinutes"
+								Spy:UpdateWorldListTimeoutSettings()
+							end,
+						},
+						OneHour = {
+							name = L["1Hour"],
+							desc = L["1HourDescription"],
+							type = "toggle",
+							order = 2,
+							get = function(info)
+								return Spy.db.profile.RemoveFromWorldList == "OneHour"
+							end,
+							set = function(info, value)
+								Spy.db.profile.RemoveFromWorldList = "OneHour"
+								Spy:UpdateWorldListTimeoutSettings()
+							end,
+						},
+						TwoHours = {
+							name = L["2Hours"],
+							desc = L["2HoursDescription"],
+							type = "toggle",
+							order = 3,
+							get = function(info)
+								return Spy.db.profile.RemoveFromWorldList == "TwoHours"
+							end,
+							set = function(info, value)
+								Spy.db.profile.RemoveFromWorldList = "TwoHours"
+								Spy:UpdateWorldListTimeoutSettings()
+							end,
+						},
+						FourHours = {
+							name = L["4Hours"],
+							desc = L["4HoursDescription"],
+							type = "toggle",
+							order = 4,
+							get = function(info)
+								return Spy.db.profile.RemoveFromWorldList == "FourHours"
+							end,
+							set = function(info, value)
+								Spy.db.profile.RemoveFromWorldList = "FourHours"
+								Spy:UpdateWorldListTimeoutSettings()
+							end,
+						},
+						Never = {
+							name = L["Never"],
+							desc = L["NeverDescription"],
+							type = "toggle",
+							order = 5,
+							get = function(info)
+								return Spy.db.profile.RemoveFromWorldList == "Never"
+							end,
+							set = function(info, value)
+								Spy.db.profile.RemoveFromWorldList = "Never"
+								Spy:UpdateWorldListTimeoutSettings()
+							end,
+						},
+					},
+				},
+			},
+		},
 		MinimapOptions = {
 			name = L["MinimapOptions"],
 			desc = L["MinimapOptions"],
 			type = "group",
-			order = 5,
+			order = 6,
 			args = {
 				intro = {
 					name = L["MinimapOptionsDescription"],
@@ -590,7 +692,7 @@ local options = {
 			name = L["DataOptions"],
 			desc = L["DataOptions"],
 			type = "group",
-			order = 6,
+			order = 7,
 			args = {
 				intro = {
 					name = L["DataOptionsDescription"],
@@ -924,7 +1026,7 @@ local Default_Profile = {
 				Percent = true,
 				NumFormat = 1,
 			},
-			Position = { x = 10, y = 760, w = 130, h = 44 },
+			Position = { x = 10, y = 760, w = 160, h = 44 },
 		},
 		AlertWindowNameSize = 14,
 		AlertWindowLocationSize = 10,
@@ -957,6 +1059,8 @@ local Default_Profile = {
 		DisplayWarningsInErrorsFrame = false,
 		EnableSound = true,
 		RemoveUndetected = "OneMinute",
+		NearbyThresholdYards = 50,
+		RemoveFromWorldList = "OneHour",
 		ShowNearbyList = true,
 		PrioritiseKoS = true,
 		PurgeData = "NinetyDays",

@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
--- Spy.lua - Fixed and Optimized
+-- Spy.lua
 -- Optimizations By: Plagueheart
 -- Server: Project Epoch
 ----------------------------------------------------------------
 local SM = LibStub:GetLibrary("LibSharedMedia-3.0")
 local Astrolabe = DongleStub("Astrolabe-0.4")
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
+local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Spy")
 
 -- region Plagueheart
@@ -22,7 +22,7 @@ local math_floor = math.floor
 -- endregion Plagueheart
 
 Spy = LibStub("AceAddon-3.0"):NewAddon("Spy", "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceTimer-3.0")
-Spy.Version = "1.2"
+Spy.Version = "1.3"
 Spy.DatabaseVersion = "1.1"
 Spy.Signature = "[Spy]"
 Spy.ButtonLimit = 10
@@ -35,6 +35,7 @@ Spy.KOSGuild = {}
 Spy.CurrentList = {}
 Spy.NearbyList = {}
 Spy.LastHourList = {}
+Spy.WorldList = {}
 Spy.ActiveList = {}
 Spy.InactiveList = {}
 Spy.PlayerCommList = {}
@@ -48,13 +49,23 @@ Spy.UpgradeMessageSent = false
 -- region Plagueheart
 --- Timeout settings for different options.
 local TIMEOUTS = {
-	OneMinute = { active = 30, inactive = 60 },
-	TwoMinutes = { active = 60, inactive = 120 },
-	FiveMinutes = { active = 150, inactive = 300 },
-	TenMinutes = { active = 300, inactive = 600 },
-	FifteenMinutes = { active = 450, inactive = 900 },
-	Never = { active = 30, inactive = -1 },
-	default = { active = 150, inactive = 300 },
+	Nearby = {
+		OneMinute = { active = 30, inactive = 60 },
+		TwoMinutes = { active = 60, inactive = 120 },
+		FiveMinutes = { active = 150, inactive = 300 },
+		TenMinutes = { active = 300, inactive = 600 },
+		FifteenMinutes = { active = 450, inactive = 900 },
+		Never = { active = 30, inactive = -1 },
+		default = { active = 150, inactive = 300 },
+	},
+	World = {
+		ThirtyMinutes = 1800,
+		OneHour = 3600,
+		TwoHours = 7200,
+		FourHours = 14400,
+		Never = -1,
+		default = 3600,
+	},
 }
 
 --- Flag: track if the player is currently zoning or in a loading state.
@@ -180,6 +191,8 @@ end
 function Spy:HandleProfileChanges()
 	Spy:CreateMainWindow()
 	Spy:UpdateTimeoutSettings()
+	Spy:UpdateWorldListTimeoutSettings()
+	Spy.NearbyThresholdYards = self.db.profile.NearbyThresholdYards
 end
 
 function Spy:SetupOptions()
@@ -196,6 +209,7 @@ function Spy:SetupOptions()
 	self.optionsFrames.DisplayOptions = ACD3:AddToBlizOptions("Spy", L["DisplayOptions"], "Spy", "DisplayOptions")
 	self.optionsFrames.AlertOptions = ACD3:AddToBlizOptions("Spy", L["AlertOptions"], "Spy", "AlertOptions")
 	self.optionsFrames.ListOptions = ACD3:AddToBlizOptions("Spy", L["ListOptions"], "Spy", "ListOptions")
+	self.optionsFrames.WorldListOptions = ACD3:AddToBlizOptions("Spy", L["WorldListOptions"], "Spy", "WorldListOptions")
 	self.optionsFrames.DataOptions = ACD3:AddToBlizOptions("Spy", L["MinimapOptions"], "Spy", "MinimapOptions")
 	self.optionsFrames.DataOptions = ACD3:AddToBlizOptions("Spy", L["DataOptions"], "Spy", "DataOptions")
 
@@ -206,10 +220,15 @@ end
 
 function Spy:UpdateTimeoutSettings()
 	local removeSetting = Spy.db.profile.RemoveUndetected
-	local timeout = TIMEOUTS[removeSetting] or TIMEOUTS.default
+	local timeout = TIMEOUTS.Nearby[removeSetting] or TIMEOUTS.Nearby.default
 
 	Spy.ActiveTimeout = timeout.active
 	Spy.InactiveTimeout = timeout.inactive
+end
+
+function Spy:UpdateWorldListTimeoutSettings()
+	local setting = Spy.db.profile.RemoveFromWorldList
+	Spy.WorldListTimeout = TIMEOUTS.World[setting] or TIMEOUTS.World.default
 end
 
 function Spy:ResetMainWindow()
@@ -373,6 +392,8 @@ function Spy:OnInitialize()
 	Spy:PurgeUndetectedData()
 	Spy:CreateMainWindow()
 	Spy:UpdateTimeoutSettings()
+	Spy:UpdateWorldListTimeoutSettings()
+	Spy.NearbyThresholdYards = self.db.profile.NearbyThresholdYards
 
 	SM.RegisterCallback(Spy, "LibSharedMedia_Registered", "UpdateBarTextures")
 	SM.RegisterCallback(Spy, "LibSharedMedia_SetGlobal", "UpdateBarTextures")
@@ -682,16 +703,33 @@ function Spy:CommReceived(prefix, message, distribution, source)
 
 			local learnt, playerData =
 				Spy:ParseUnitDetails(player, class, level, race, zone, subZone, mapX, mapY, guild)
-			if playerData and playerData.isEnemy and not SpyPerCharDB.IgnoreData[player] then
-				Spy.PlayerCommList[player] = Spy.CurrentMapNote
-				Spy:AddDetected(player, time(), learnt, source)
 
-				if Spy.db.profile.DisplayOnMap then
+			if playerData and playerData.isEnemy and not SpyPerCharDB.IgnoreData[player] then
+				local currentTime = time()
+				Spy.WorldList[player] = currentTime
+				Spy.LastHourList[player] = currentTime
+
+				local pC, pZ, pX, pY = Astrolabe:GetCurrentPlayerPosition()
+				local remoteC, remoteZ = Spy:GetZoneID(zone)
+
+				if pC and remoteC and mapX and mapY then
+					local distance = Astrolabe:ComputeDistance(pC, pZ, pX, pY, remoteC, remoteZ, mapX, mapY)
+					if distance and distance <= Spy.db.profile.NearbyThresholdYards then
+						Spy:AddDetected(player, currentTime, learnt, source)
+					end
+				end
+
+				if Spy.db.profile.DisplayOnMap and not Spy.PlayerCommList[player] then
+					Spy.PlayerCommList[player] = Spy.CurrentMapNote
 					if Spy.IsCurrentlyZoning then
 						Spy:ScheduleTimer("ShowMapNote", self.MapUpdateDelay.Zoning, player)
 					else
 						Spy:ScheduleTimer("ShowMapNote", self.MapUpdateDelay.NotZoning, player)
 					end
+				end
+
+				if Spy.db.profile.CurrentList == 5 then
+					Spy:RequestRefresh()
 				end
 			end
 		end
