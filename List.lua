@@ -80,26 +80,25 @@ function Spy:ManageNearbyList()
 
 	local activeKoS = {}
 	local active = {}
-	for player in pairs(Spy.ActiveList) do
-		local position = Spy.NearbyList[player]
-		if position ~= nil then
-			if prioritiseKoS and SpyPerCharDB.KOSData[player] then
-				table.insert(activeKoS, { player = player, time = position })
-			else
-				table.insert(active, { player = player, time = position })
-			end
-		end
-	end
-
 	local inactiveKoS = {}
 	local inactive = {}
-	for player in pairs(Spy.InactiveList) do
-		local position = Spy.NearbyList[player]
-		if position ~= nil then
-			if prioritiseKoS and SpyPerCharDB.KOSData[player] then
-				table.insert(inactiveKoS, { player = player, time = position })
+
+	for player, timestamp in pairs(Spy.NearbyList) do
+		local entry = { player = player, time = timestamp }
+
+		local isInactive = Spy.InactiveList[player]
+
+		if prioritiseKoS and SpyPerCharDB.KOSData[player] then
+			if isInactive then
+				table.insert(inactiveKoS, entry)
 			else
-				table.insert(inactive, { player = player, time = position })
+				table.insert(activeKoS, entry)
+			end
+		else
+			if isInactive then
+				table.insert(inactive, entry)
+			else
+				table.insert(active, entry)
 			end
 		end
 	end
@@ -118,18 +117,19 @@ function Spy:ManageNearbyList()
 	end)
 
 	local list = {}
-	for player in pairs(activeKoS) do
-		table.insert(list, activeKoS[player])
+	for _, player in ipairs(activeKoS) do
+		table.insert(list, player)
 	end
-	for player in pairs(inactiveKoS) do
-		table.insert(list, inactiveKoS[player])
+	for _, player in ipairs(inactiveKoS) do
+		table.insert(list, player)
 	end
-	for player in pairs(active) do
-		table.insert(list, active[player])
+	for _, player in ipairs(active) do
+		table.insert(list, player)
 	end
-	for player in pairs(inactive) do
-		table.insert(list, inactive[player])
+	for _, player in ipairs(inactive) do
+		table.insert(list, player)
 	end
+
 	Spy.CurrentList = list
 end
 
